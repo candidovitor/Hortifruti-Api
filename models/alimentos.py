@@ -3,7 +3,7 @@ from database import banco
 class FrutaModel(banco.Model):
     __tablename__ = 'informacao'
 
-    fruit_id = banco.Column(banco.Float, primary_key=True)
+    fruit_id = banco.Column(banco.Integer, primary_key=True)
     name = banco.Column(banco.String(20))
     family = banco.Column(banco.String(30))
     genus = banco.Column(banco.String(40))
