@@ -29,6 +29,6 @@ informacao = [
     }
 ]
 
-class informacaos(Resource):
+class Frutas(Resource):
     def get(self):
         return {"informacao": [nome.json() for nome in FrutaModel.query.all()]}
