@@ -1,9 +1,11 @@
 from flask import Flask, render_template
 from flask_restful import Api
+from models import alimentos
+from resources import alimentos
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
 @app.route('/')
