@@ -14,6 +14,18 @@ informacao = [
         'fat': 0,
         'calories': 89,
         'sugar': 12
+    },
+    {
+        'name': 'grape',
+        'fruit_id': 'grape',
+        'family': 'Vitaceae',
+        'genus': 'Vitis',
+        'order': 'Vitales',
+        'carbohydrates': 17,
+        'protein': 0,
+        'fat': 0,
+        'calories': 67,
+        'sugar': 16
     }
 ]
 
