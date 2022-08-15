@@ -13,7 +13,7 @@ def cria_banco():
     banco.create_all()
 
 api.add_resource(Frutas, '/info')
-api.add_resource(Fruta, '/info/<string:fruit_id>')
+api.add_resource(Fruta, '/info/<int:fruit_id>')
 #api.add_resource(Nutritions, '/info/<string:fruit_id>/nutritions')
 
 if __name__ == "__main__":
