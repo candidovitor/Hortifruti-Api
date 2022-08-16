@@ -40,40 +40,15 @@ class Fruta(Resource):
     def put(self, fruit_id):
 
             dados = Fruta.argumentos.parse_args()
-            nova_fruta = {'fruit_id': fruit_id, **dados}
-            dict_fruta = Fruta.find_info(self, fruit_id)
-
-            if dict_fruta:
-                
-                atualiza_fruta = {
-                    'fruit_id': fruit_id,
-                    'name': dados['name'],
-                    'family': dados['family'],
-                    'genus': dados['genus'],
-                    'order': dados['order'],
-                    'carbohydrates': dados['carbohydrates'],
-                    'protein': dados['protein'],
-                    'fat': dados['fat'],
-                    'calories': dados['calories'],
-                    'sugar': dados['sugar']
-                }
-
-                #print(f' post {atualiza_fruta}')
-                #print(f'Original {dict_fruta}')
-
-                for key,value in dict_fruta.items():
-                    
-                    valor_enviado = atualiza_fruta[key]
-                    if valor_enviado != value:
-                        #print(f'{dict_fruta[key]} mudou de para {valor_enviado}')
-                        dict_fruta[key]=valor_enviado
-                return dict_fruta, 200
-
-            list_frutas.append(nova_fruta)
-            return nova_fruta, 201
-
+            fruta_encontrada = FrutaModel.find_info(fruit_id)
+            if fruta_encontrada:
+                fruta_encontrada.update_fruta(**dados)
+                fruta_encontrada.save_fruit()
+                return fruta_encontrada.json(), 200
+            fruta = FrutaModel(fruit_id, **dados)
+            fruta.save_fruit()
+            return fruta.json(), 201
             
-
     def delete(self, fruit_id):
 
         fruta = FrutaModel.find_info(fruit_id)
