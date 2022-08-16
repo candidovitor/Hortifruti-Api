@@ -3,7 +3,7 @@ from models.alimentos import FrutaModel
 
 class Frutas(Resource):
     def get(self):
-        return {"information": list_frutas}
+        return {"frutas": [fruta.json() for fruta in FrutaModel.query.all()]}
 
 class Fruta(Resource):
     argumentos = reqparse.RequestParser()
@@ -20,10 +20,9 @@ class Fruta(Resource):
         
     def get(self, fruit_id):
 
-        
-        fruta = Fruta.find_info(self, fruit_id)
+        fruta = FrutaModel.find_info(fruit_id)
         if fruta:
-            return fruta
+            return fruta.json()
         else:
             return{"messege": "Fruit not found"}, 404
 
@@ -77,16 +76,14 @@ class Fruta(Resource):
 
     def delete(self, fruit_id):
 
-        """ fruta = Fruta.find_info(self, fruit_id)
-        print(fruta, fruit_id) """
+        fruta = FrutaModel.find_info(fruit_id)
         
-        global list_frutas
-
-        list_frutas = [
-
-            fruta for fruta in list_frutas if fruta['fruit_id'] != fruit_id
-
-        ]
+        if fruta:
+            try:
+                fruta.delete_fruta()
+            except:
+                return {'messege': 'An internal error ocurred trying to dalete fruit information.'}, 500
+            return {'messesge': 'Fruit deleted'}
         return{'messege':'Fruit deleted'}, 200
             
 

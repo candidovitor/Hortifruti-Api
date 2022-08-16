@@ -21,14 +21,13 @@ class FrutaModel(banco.Model):
         self.family = family
         self.genus = genus
         self.order = order
-        self.carbohydrates
+        self.carbohydrates = carbohydrates
         self.protein = protein
         self.fat = fat
         self.calories = calories
         self.sugar = sugar
 
         
-
     def json(self):
         return {
             
@@ -61,5 +60,21 @@ class FrutaModel(banco.Model):
     def save_fruit(self):
         banco.session.add(self)
         banco.session.commit()
+
+    def update_fruta(self, family, name, genus, order, carbohydrates, protein, fat, calories, sugar):
+        self.name = name
+        self.family = family
+        self.genus = genus
+        self.order = order
+        self.carbohydrates = carbohydrates
+        self.protein = protein
+        self.fat = fat
+        self.calories = calories
+        self.sugar = sugar
+
+    def delete_fruta(self):
+        banco.session.delete(self)
+        banco.session.commit()
+
         
     
