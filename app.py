@@ -14,7 +14,7 @@ def cria_banco():
 
 api.add_resource(Frutas, '/info')
 api.add_resource(Fruta, '/info/<int:fruit_id>')
-#api.add_resource(Nutritions, '/info/<string:fruit_id>/nutritions')
+#api.add_resource(Nutritions, '/info/<int:fruit_id>/nutritions')
 
 if __name__ == "__main__":
     from database import banco

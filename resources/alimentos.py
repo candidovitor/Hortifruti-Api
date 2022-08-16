@@ -1,66 +1,27 @@
 from flask_restful import Resource, reqparse
 from models.alimentos import FrutaModel
 
-list_frutas = [
-    {
-        'fruit_id': 1,
-        'name': 'banana',       
-        'family': 'Musaceae',
-        'genus': 'Musa',
-        'order': 'Zingiberales',
-        'carbohydrates': 23,
-        'protein': 1,
-        'fat': 0,
-        'calories': 89,
-        'sugar': 12
-        
-    },
-    {
-        'fruit_id': 2,
-        'name': 'grape',
-        'family': 'Vitaceae',
-        'genus': 'Vitis',
-        'order': 'Vitales', 
-        'carbohydrates': 17,
-        'protein': 0,
-        'fat': 0,
-        'calories': 67,
-        'sugar': 16
-        
-    }
-    
-]
-
 class Frutas(Resource):
     def get(self):
         return {"information": list_frutas}
 
 class Fruta(Resource):
     argumentos = reqparse.RequestParser()
-    argumentos.add_argument('fruit_id')
-    argumentos.add_argument('name')
-    argumentos.add_argument('family')
-    argumentos.add_argument('genus')
-    argumentos.add_argument('order')
-    argumentos.add_argument('carbohydrates')
-    argumentos.add_argument('protein')
-    argumentos.add_argument('fat')
-    argumentos.add_argument('calories')
-    argumentos.add_argument('sugar')
-
-    def find_info(self, fruit_id):
-        
-        for fruta in list_frutas:
-            
-            if int(fruta['fruit_id']) == int(fruit_id):
-                return fruta
-        return None
+    argumentos.add_argument('name', type=str, required=True)
+    #argumentos.add_argument('fruit_id')
+    argumentos.add_argument('family', type=str, required=True)
+    argumentos.add_argument('genus', type=str, required=True)
+    argumentos.add_argument('order', type=str, required=True)
+    argumentos.add_argument('carbohydrates', type=float, required=True)
+    argumentos.add_argument('protein', type=float, required=True)
+    argumentos.add_argument('fat', type=float, required=True)
+    argumentos.add_argument('calories', type=float, required=True)
+    argumentos.add_argument('sugar', type=float, required=True)
         
     def get(self, fruit_id):
 
         
         fruta = Fruta.find_info(self, fruit_id)
-        print(fruta)
         if fruta:
             return fruta
         else:
@@ -68,23 +29,14 @@ class Fruta(Resource):
 
     def post(self, fruit_id):
 
+        if FrutaModel.find_info(fruit_id):
+            return {'message': "Fruit id '{}' already exist".format(fruit_id)}, 400
+
         dados = Fruta.argumentos.parse_args()
-
-        nova_fruta = {
-            'fruit_id': fruit_id,
-            'name': dados['name'],
-            'family': dados['family'],
-            'genus': dados['genus'],
-            'order': dados['order'],
-            'carbohydrates': dados['carbohydrates'],
-            'protein': dados['protein'],
-            'fat': dados['fat'],
-            'calories': dados['calories'],
-            'sugar': dados['sugar']
-        }
-
-        list_frutas.append(nova_fruta)
-        return nova_fruta, 200
+        fruta = FrutaModel(fruit_id, **dados)
+        fruta.save_fruit()
+        return fruta.json()
+        
 
     def put(self, fruit_id):
 
@@ -93,7 +45,7 @@ class Fruta(Resource):
             dict_fruta = Fruta.find_info(self, fruit_id)
 
             if dict_fruta:
-                print('atualizar')
+                
                 atualiza_fruta = {
                     'fruit_id': fruit_id,
                     'name': dados['name'],
@@ -107,18 +59,15 @@ class Fruta(Resource):
                     'sugar': dados['sugar']
                 }
 
-                print(f' post {atualiza_fruta}')
-                print(f'Original {dict_fruta}')
+                #print(f' post {atualiza_fruta}')
+                #print(f'Original {dict_fruta}')
 
                 for key,value in dict_fruta.items():
                     
                     valor_enviado = atualiza_fruta[key]
                     if valor_enviado != value:
-                        print(f'{dict_fruta[key]} mudou de para {valor_enviado}')
+                        #print(f'{dict_fruta[key]} mudou de para {valor_enviado}')
                         dict_fruta[key]=valor_enviado
-                    
-                        
-                   
                 return dict_fruta, 200
 
             list_frutas.append(nova_fruta)
@@ -127,12 +76,20 @@ class Fruta(Resource):
             
 
     def delete(self, fruit_id):
-        pass 
 
-""" class Nutritions(Resource):
-    def get(self, fruit_id, nutrition):
-        for fruta in frutas:
-                for nutrition in nutritions:
-                    if fruta['fruit_id'] == fruit_id and nutrition['nutritions'] == nutritions:
-                        return nutritions """
+        """ fruta = Fruta.find_info(self, fruit_id)
+        print(fruta, fruit_id) """
+        
+        global list_frutas
+
+        list_frutas = [
+
+            fruta for fruta in list_frutas if fruta['fruit_id'] != fruit_id
+
+        ]
+        return{'messege':'Fruit deleted'}, 200
+            
+
+
+        
     
